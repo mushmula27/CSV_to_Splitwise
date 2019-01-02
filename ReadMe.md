@@ -28,7 +28,7 @@ $ pip install -r requirements.txt
 
 Run `./startserver.sh` in terminal.
 
-Go to http://localhost:5000/ and authorise the application in Splitwise as prompted.
+Go to http://localhost:5000/auth and authorise the application in Splitwise as prompted.
 
 ## Future goals
 
