@@ -13,6 +13,7 @@ CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 CONSUMER_KEY = os.getenv("CONSUMER_KEY")
 
 CSV_FILE_LOCATION = os.getenv("CSV_FILE_LOCATION")
+print(CSV_FILE_LOCATION)
 
 # Create splitwise instance
 sObj = Splitwise(CONSUMER_KEY,CONSUMER_SECRET)
@@ -49,11 +50,9 @@ def main():
         group_list = [group.getName() for group in groups]
         group_id = [group.getId() for group in groups]
         group_dict = {group.getName():group for group in groups}
-        print(group_list, group_id, group_dict, friends_dict)
 
-        with open(CSV_FILE_LOCATION) as data:
+        with open(CSV_FILE_LOCATION, encoding='utf-8-sig') as data:
             importedData = list(csv.DictReader(data))
-
 
 # Begin loop reading the CSV
         for row in importedData:
