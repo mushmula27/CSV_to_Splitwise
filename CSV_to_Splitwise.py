@@ -53,11 +53,18 @@ def main():
 
         with open(CSV_FILE_LOCATION, encoding='utf-8-sig') as data:
             importedData = list(csv.DictReader(data))
+            # print(importedData)
+
+            ##### Vet csv before proceeding #####
+        for i, row in enumerate(importedData):
+            if not (row.get('Debit') and row.get('Payer') and row.get('Group')):
+                return f"Remove blanks on row {i+1} in your CSV and try again."
 
 # Begin loop reading the CSV
         for row in importedData:
             expense = Expense()
-            price = float(row['Debit'])
+            print (row['Debit'])
+            price = float(row['Debit'] or 0)
             expense.setCost(price)
             expense.setDate(row['Date'])
             expense.setDescription(row['Description'])
