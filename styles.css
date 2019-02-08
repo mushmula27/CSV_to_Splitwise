@@ -1,0 +1,43 @@
+h1 {
+  text-align: center;
+  padding-top: 5em;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 32px;
+
+  color: #000000;
+}
+
+.maButton {
+  text-align: center;
+  padding-top: 3em;
+}
+.button {
+  padding: 0.5em 5em;
+  border: 0.1em solid #ff652f;
+  border-radius: 0.35em;
+  box-sizing: border-box;
+  text-decoration: none;
+
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: #ff652f;
+  text-align: center;
+  transition: all 0.2s;
+  background-color: transparent;
+}
+
+.button:hover {
+  color: #000000;
+  background-color: #ff652f;
+}
+
+@media all and (max-width: 30em) {
+  .button {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
