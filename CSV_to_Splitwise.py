@@ -6,6 +6,8 @@ from flask import Flask, redirect, session, request, url_for, jsonify
 import os
 import csv
 import random
+import hashlib
+import json
 
 load_dotenv()
 
@@ -14,6 +16,9 @@ CONSUMER_KEY = os.getenv("CONSUMER_KEY")
 
 CSV_FILE_LOCATION = os.getenv("CSV_FILE_LOCATION")
 print(CSV_FILE_LOCATION)
+
+DB = os.getenv("DB_FILE")
+db = {}
 
 # Create splitwise instance
 sObj = Splitwise(CONSUMER_KEY,CONSUMER_SECRET)
@@ -60,10 +65,26 @@ def main():
             if not (row.get('Debit') and row.get('Payer') and row.get('Group')):
                 return f"Remove blanks on row {i+1} in your CSV and try again."
 
-# Begin loop reading the CSV
+        with open(DB) as db_json:
+            db = json.load(db_json)
+
+        msg = []
+
+        # Begin loop reading the CSV
         for row in importedData:
+            rowstring = f"{row.get('Date')}, {row.get('Debit')}, {row.get('Description')}, {row.get('Group')}, {row.get('Payer')}"
+            rsbytes = bytes(rowstring, 'utf-8')
+            hash_obj = hashlib.sha256(rsbytes)
+            hex_dig = hash_obj.hexdigest()
+            # print(hex_dig)
+            if hex_dig in db:
+                msg.append(f"{rowstring} looks like a duplicate, skipping")
+                continue
+            else:
+                db[hex_dig] = "True"
+
+
             expense = Expense()
-            print (row['Debit'])
             price = float(row['Debit'] or 0)
             expense.setCost(price)
             expense.setDate(row['Date'])
@@ -95,7 +116,15 @@ def main():
             expense.setUsers(users)
 
             expense = sObj.createExpense(expense)
-        return 'Import successful!'
+
+        msg.append('Import successful!')
+
+        with open(DB, 'w') as outfile:
+            json.dump(db, outfile)
+            msg.append('New entries recorded in db.')
+
+        message = "<br>".join(msg)
+        return message
 
 
     return 'User is not logged in'
